@@ -10,6 +10,11 @@ plt.switch_backend('agg')
 app = flask.Flask(__name__)
 
 
+@app.route('/', methods=['GET'])
+def say_hi():
+    return "<h1>Hi...</h1>"
+
+
 @app.route('/graph', methods=['GET'])
 def get_graph():
     response = requests.get(os.environ.get('END_POINT'), headers={
