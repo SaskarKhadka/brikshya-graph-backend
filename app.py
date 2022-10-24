@@ -6,8 +6,6 @@ import requests
 import os
 import seaborn as sns
 from datetime import datetime, timedelta
-
-from sqlalchemy import false
 plt.switch_backend('agg')
 
 app = flask.Flask(__name__)
