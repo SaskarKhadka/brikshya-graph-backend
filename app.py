@@ -1,5 +1,4 @@
 import io
-from tkinter import Y
 import matplotlib.pyplot as plt
 import pandas as pd
 import flask
@@ -46,6 +45,8 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
 def history_data_prep():
     response = requests.get(os.environ.get('END_POINT'), headers={
         'x-auth-token': flask.request.headers['x-auth-token']})
+    print(response.text)
+    response.raise_for_status()
     histories = list(response.json())
     df = pd.DataFrame(histories)
     df_main = pd.DataFrame(df["product"].tolist())
@@ -71,6 +72,7 @@ def total_earnings():
         "total_earnings": total_earnings,
         "total_orders": total_orders
     }
+    print(response)
 
     return flask.Response(
         response=flask.json.dumps(response),
