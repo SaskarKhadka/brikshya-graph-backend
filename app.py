@@ -27,7 +27,7 @@ MONTHS = {
 
 
 def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
-    ax = sns.barplot(data=data, x=x, y=y)
+    ax = sns.barplot(data=data, x=data[x], y=data[y])
     if editLabel:
         ax.set_xticklabels(ax.get_xticklabels(), rotation=30,
                            ha='right', fontsize=7)
@@ -45,8 +45,7 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
 def history_data_prep():
     response = requests.get(os.environ.get('END_POINT'), headers={
         'x-auth-token': flask.request.headers['x-auth-token']})
-    print(response.text)
-    response.raise_for_status()
+    # response.raise_for_status()
     histories = list(response.json())
     df = pd.DataFrame(histories)
     df_main = pd.DataFrame(df["product"].tolist())
