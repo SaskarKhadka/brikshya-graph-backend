@@ -36,6 +36,10 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
     plt.ylabel(y_label)
     plt.locator_params(axis="y", integer=True, tight=True)
     plt.tight_layout()
+    max_val = data[y].max()
+    max_val = max_val + max_val % 5
+    plt.ylim(top=max_val)
+    plt.ylim(bottom=0)
     bytes_image = io.BytesIO()
     plt.savefig(bytes_image, format='png')
     bytes_image.seek(0)
@@ -71,8 +75,6 @@ def total_earnings():
         "total_earnings": total_earnings,
         "total_orders": total_orders
     }
-    print(response)
-
     return flask.Response(
         response=flask.json.dumps(response),
         status=200,
