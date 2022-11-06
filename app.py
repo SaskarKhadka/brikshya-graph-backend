@@ -38,7 +38,7 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
     plt.locator_params(axis="y", integer=True, tight=True)
     plt.tight_layout()
     max_val = data[y].max()
-    max_val = max_val + 5 if max_val % 5 == 0 else max_val % 5
+    max_val = max_val + (5 if max_val % 5 == 0 else max_val % 5)
     plt.ylim(top=max_val)
     plt.ylim(bottom=0)
     bytes_image = io.BytesIO()
