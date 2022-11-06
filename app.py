@@ -1,6 +1,7 @@
 import io
 import matplotlib.pyplot as plt
 import pandas as pd
+import base64
 import flask
 import requests
 import os
@@ -37,7 +38,7 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
     plt.locator_params(axis="y", integer=True, tight=True)
     plt.tight_layout()
     max_val = data[y].max()
-    max_val = max_val + max_val % 5
+    max_val = max_val + 5 if max_val % 5 == 0 else max_val % 5
     plt.ylim(top=max_val)
     plt.ylim(bottom=0)
     bytes_image = io.BytesIO()
@@ -90,9 +91,13 @@ def top10mostselling():
     df_grouped.sort_values(by='total_sold', inplace=True, ascending=False)
     bytes_image = create_bar_plot(
         data=df_grouped, x='name', y='total_sold', x_label='Plants', y_label='Total Sold', title='Top 10 most selling')
-    return flask.send_file(bytes_image,
-                           download_name='plot.png',
-                           mimetype='image/png')
+    b64string = base64.b64encode(bytes_image.read())
+    res = {
+        "image": b64string.decode('utf8')
+    }
+    return flask.Response(flask.json.dumps(res),
+                          status=200,
+                          mimetype='application/json')
 
 
 def popular_products():
@@ -121,9 +126,13 @@ def popular_graph():
     response = popular_products()
     bytes_image = create_bar_plot(
         data=response, x='name', y='total_sold', x_label='Plants', y_label='Total Sold', title='Popular Products')
-    return flask.send_file(bytes_image,
-                           download_name='plot.png',
-                           mimetype='image/png')
+    b64string = base64.b64encode(bytes_image.read())
+    res = {
+        "image": b64string.decode('utf8')
+    }
+    return flask.Response(flask.json.dumps(res),
+                          status=200,
+                          mimetype='application/json')
 
 
 @ app.route('/popular', methods=['GET'])
@@ -156,9 +165,13 @@ def top_this_month():
     df_grouped.sort_values(by='total_sold', inplace=True, ascending=False)
     bytes_image = create_bar_plot(
         data=df_grouped, x='name', y='total_sold', x_label='Plants', y_label='Total Sold', editLabel=True, title=f'Top 10 most selling {MONTHS[nepal_month]}, {nepal_year}')
-    return flask.send_file(bytes_image,
-                           download_name='plot.png',
-                           mimetype='image/png')
+    b64string = base64.b64encode(bytes_image.read())
+    res = {
+        "image": b64string.decode('utf8')
+    }
+    return flask.Response(flask.json.dumps(res),
+                          status=200,
+                          mimetype='application/json')
 
 
 @ app.route('/graph/month/<month>', methods=['GET'])
@@ -173,9 +186,13 @@ def data_given_month(month):
     df_grouped.sort_values(by='total_sold', inplace=True, ascending=False)
     bytes_image = create_bar_plot(
         data=df_grouped, x='name', y='total_sold', x_label='Plants', y_label='Total Sold', editLabel=True, title=f'Items sold on {MONTHS[month]}')
-    return flask.send_file(bytes_image,
-                           download_name='plot.png',
-                           mimetype='image/png')
+    b64string = base64.b64encode(bytes_image.read())
+    res = {
+        "image": b64string.decode('utf8')
+    }
+    return flask.Response(flask.json.dumps(res),
+                          status=200,
+                          mimetype='application/json')
 
 
 @ app.route('/graph/monthlysell', methods=['GET'])
@@ -191,9 +208,13 @@ def monthly_sell():
                             "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
     bytes_image = create_bar_plot(
         data=df_grouped, x='months', y='total_sold', x_label='Months', y_label='Total Sold', editLabel=False, title='Total items sold each month')
-    return flask.send_file(bytes_image,
-                           download_name='plot.png',
-                           mimetype='image/png')
+    b64string = base64.b64encode(bytes_image.read())
+    res = {
+        "image": b64string.decode('utf8')
+    }
+    return flask.Response(flask.json.dumps(res),
+                          status=200,
+                          mimetype='application/json')
 
 
 if __name__ == "__main__":
