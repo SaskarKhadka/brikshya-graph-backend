@@ -47,9 +47,15 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
     return bytes_image
 
 
-def history_data_prep():
-    response = requests.get(os.environ.get('END_POINT'), headers={
-        'x-auth-token': flask.request.headers['x-auth-token']})
+def history_data_prep(user=False):
+    response = None
+    if (user) {
+        response = requests.get(os.environ.get('END_POINT_2'))
+    }
+    else {
+        response = requests.get(os.environ.get('END_POINT'), headers={
+            'x-auth-token': flask.request.headers['x-auth-token']})
+    }
     # response.raise_for_status()
     histories = list(response.json())
     df = pd.DataFrame(histories)
@@ -100,8 +106,8 @@ def top10mostselling():
                           mimetype='application/json')
 
 
-def popular_products():
-    df_main = history_data_prep()
+def popular_products(user=False):
+    df_main = history_data_prep(user)
     df_main['date'] = df_main['date'].str.split("T", expand=True)[0]
     df_grouped = pd.DataFrame(
         {'total_sold': df_main.groupby(["_id", "name"])['quantity'].sum()}).reset_index()
@@ -137,7 +143,7 @@ def popular_graph():
 
 @ app.route('/popular', methods=['GET'])
 def popular_products_details():
-    response = popular_products()
+    response = popular_products(True)
     response = response.to_json(orient='records')
     return flask.Response(
         response=response,
