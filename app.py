@@ -49,13 +49,11 @@ def create_bar_plot(data, x, y, x_label, y_label, title='', editLabel=True):
 
 def history_data_prep(user=False):
     response = None
-    if (user) {
+    if (user):
         response = requests.get(os.environ.get('END_POINT_2'))
-    }
-    else {
+    else:
         response = requests.get(os.environ.get('END_POINT'), headers={
             'x-auth-token': flask.request.headers['x-auth-token']})
-    }
     # response.raise_for_status()
     histories = list(response.json())
     df = pd.DataFrame(histories)
